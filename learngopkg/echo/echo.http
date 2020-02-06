@@ -1,0 +1,18 @@
+GET http://localhost:8081
+
+### 参数请求
+GET http://localhost:8081/name/Delta
+
+### 结构体绑定参数请求
+# @name login
+POST http://localhost:8081/login
+Content-Type: application/x-www-form-urlencoded
+# a:b
+# Authorization: Basic YTpi
+
+user=a&pass=b
+
+### Token 测试
+@token = {{login.response.body.token}}
+GET http://localhost:8081/user/info
+Authorization: Bearer {{token}}
