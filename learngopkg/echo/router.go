@@ -25,7 +25,7 @@ type LoginParams struct {
 
 type jwtClaims struct {
 	User string `json:"user"`
-	Exp int `json:"exp"`
+	Exp  int    `json:"exp"`
 	jwt.StandardClaims
 }
 
@@ -51,6 +51,7 @@ func Login(c echo.Context) error {
 	})
 }
 
+// UserInfo 获取用户信息
 func UserInfo(c echo.Context) error {
 	token := c.Get("user").(*jwt.Token)
 	claims := token.Claims.(*jwtClaims)

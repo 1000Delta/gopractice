@@ -23,9 +23,11 @@ func main() {
 
 	// JWT 中间件测试
 	userGroup := e.Group("/user", middleware.JWTWithConfig(middleware.JWTConfig{
-		Claims: &jwtClaims{},
+		Claims:     &jwtClaims{},
 		SigningKey: []byte("secret"),
 	}))
+
+	// JWT 访问测试
 	userGroup.GET("/info", UserInfo)
 	e.Debug = true
 	e.Logger.Fatal(e.Start(":8081"))
