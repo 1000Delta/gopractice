@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GUI 程序测试</title>
+</head>
+
+<body onload="start()">
+    GUI页面
+    <button id="print-hello">问好</button>
+    <div>
+        <div>输出：</div>
+        <div id="output"></div>
+    </div>
+</body>
+<script>
+    let helloBtn = document.querySelector("#print-hello");
+    let output = document.querySelector("#output");
+
+    // 禁用全局右击鼠标
+    document.querySelector("html").addEventListener("contextmenu", function () {
+        console.log("点击右键");
+        return false
+    })
+    // 添加点击按钮事件
+    helloBtn.addEventListener("click", async function () {
+        output.innerHTML += `<p>${await printHello()}</p>`
+    })
+</script>
+
+</html>
