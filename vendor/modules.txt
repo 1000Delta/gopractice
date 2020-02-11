@@ -1,2 +1,0 @@
-# github.com/bitly/go-hostpool v0.1.0
-github.com/bitly/go-hostpool
