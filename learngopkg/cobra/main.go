@@ -15,8 +15,8 @@ limitations under the License.
 */
 package main
 
-import "learncobra/cmd"
+import "github.com/1000Delta/gopractice/learngopkg/cobra/cmd"
 
 func main() {
-  cmd.Execute()
+	cmd.Execute()
 }

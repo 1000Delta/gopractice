@@ -1,4 +1,4 @@
-module learncobra
+module github.com/1000Delta/gopractice/learngopkg/cobra
 
 go 1.12
 
