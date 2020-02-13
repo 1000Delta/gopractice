@@ -1,4 +1,4 @@
-module echo
+module github.com/1000Delta/gopractice/learngopkg/echo
 
 go 1.12
 
