@@ -1,4 +1,4 @@
-module learnzap
+module github.com/1000Delta/gopractice/learngopkg/zap
 
 go 1.12
 

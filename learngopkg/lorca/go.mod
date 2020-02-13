@@ -1,4 +1,4 @@
-module learnlorca
+module github.com/1000Delta/gopractice/learngopkg/lorca
 
 go 1.12
 

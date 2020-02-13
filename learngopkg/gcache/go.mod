@@ -1,4 +1,4 @@
-module learngcache
+module github.com/1000Delta/gopractice/learngopkg/gcache
 
 go 1.12
 
