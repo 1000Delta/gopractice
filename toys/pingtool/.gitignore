@@ -1,0 +1,7 @@
+# ping file
+*.ping
+!hosts.ping
+
+# go build
+pingtool
+pingtool.exe
