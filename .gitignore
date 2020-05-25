@@ -1,2 +1,6 @@
 # go module
 vendor
+
+# editor
+.vscode
+.idea
