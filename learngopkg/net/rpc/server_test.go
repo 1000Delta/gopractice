@@ -5,6 +5,7 @@ import (
 	"net/rpc"
 	"net/rpc/jsonrpc"
 	"testing"
+	"time"
 )
 
 func TestBaseRPC(t *testing.T) {
@@ -27,9 +28,15 @@ func TestJSONRPC(t *testing.T) {
 	if err != nil {
 		log.Fatal("Dial rpc error: " + err.Error())
 	}
+	defer func() {
+		err := client.Close()
+		if err != nil {
+			log.Fatalf("TCP client close error: %s", err.Error())
+		}
+	}()
 
 	var reply string
-	err = client.Call(BackServiceName+".Back", `123`, &reply)
+	err = client.Call(BackServiceName+".Back", time.Now().String(), &reply)
 	if err != nil {
 		log.Fatal("Call rpc service error: " + err.Error())
 	}

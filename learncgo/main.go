@@ -1,17 +1,12 @@
 package main
 
 /*
-void PrintHello(void);
+#include "hello.h"
+void PrintHelloGo(void);
 */
 import "C"
 
-import "fmt"
-
 func main() {
-	C.PrintHello()
-}
-
-//export PrintHello
-func PrintHello() {
-	fmt.Println("Hello")
+	C.PrintHelloC()
+	C.PrintHelloGo()
 }

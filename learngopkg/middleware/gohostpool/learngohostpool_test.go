@@ -2,12 +2,13 @@ package learngopkg
 
 import (
 	"errors"
-	"testing"
-	"github.com/bitly/go-hostpool"
 	"sync"
+	"testing"
+
+	hostpool "github.com/bitly/go-hostpool"
 )
 
-func TestComplicate(t *testing.T)  {
+func TestComplicate(t *testing.T) {
 	hp := hostpool.NewEpsilonGreedy([]string{"a", "b"}, 0, &hostpool.LinearEpsilonValueCalculator{})
 	hostResponse1 := hp.Get()
 	hostResponse2 := hp.Get()

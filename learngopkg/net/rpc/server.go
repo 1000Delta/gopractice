@@ -6,12 +6,14 @@ import (
 	"net/rpc"
 	"net/rpc/jsonrpc"
 	"sync"
+
+	"github.com/golang/protobuf/proto"
 )
 
 // HelloServiceName is the name of HelloService
 const (
 	HelloServiceName = "github.com/1000delta/gopractice/learngopkg/rpc/HelloService"
-	BackServiceName = "github.com/1000delta/gopractice/learngopkg/rpc/BackService"
+	BackServiceName  = "github.com/1000delta/gopractice/learngopkg/rpc/BackService"
 )
 
 var wg *sync.WaitGroup
@@ -66,7 +68,7 @@ func BaseRPC() {
 }
 
 // BackServiceInterface bind the service implement Back method
-type BackServiceInterface interface{
+type BackServiceInterface interface {
 	Back(request string, response *string) error
 }
 
@@ -79,7 +81,7 @@ func RegisterBackService(srv BackServiceInterface) error {
 	return nil
 }
 
-// SecondService provide rpc service 
+// SecondService provide rpc service
 type SecondService struct{}
 
 // Back return the info of request
@@ -105,13 +107,27 @@ func JSONRPC() {
 	}
 
 	log.Print("Listening " + JSONRPCHost)
-	conn, err := listener.Accept()
-	if err != nil {
-		log.Fatal("Accept port listener error: " + err.Error())
+	for {
+		conn, err := listener.Accept()
+		if err != nil {
+			log.Fatal("Accept port listener error: " + err.Error())
+		}
+		rpc.ServeCodec(jsonrpc.NewServerCodec(conn))
+		log.Printf("JSONRPC served to %s", conn.RemoteAddr())
 	}
+}
 
-	rpc.ServeCodec(jsonrpc.NewServerCodec(conn))
-	log.Print("JSONRPC service over")
+type AddressBookService struct{}
+
+func (a *AddressBookService) Read(id int, adsbk *AddressBook) error {
+	
+}
+
+// ProtoRPC 创建一个使用 protobuf 的 RPC 服务
+func ProtoRPC() {
+	defer wg.Done()
+
+	
 }
 
 func main() {

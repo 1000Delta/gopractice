@@ -1,11 +1,12 @@
 package main
 
-// #include "hellogo.h"
+/*
+#include "hello.h"
+*/
 import "C"
-
 import "fmt"
 
-// export PrintHello
-func PrintHello() {
-	fmt.Println(C.GoString("Hello"))
+//export PrintHelloGo
+func PrintHelloGo() {
+	fmt.Println(C.GoString(C.CString("Hello Go")))
 }

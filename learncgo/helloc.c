@@ -1,6 +1,6 @@
-#include "helloc.h"
+#include "hello.h"
 #include <stdio.h>
 
 void PrintHelloC(void) {
-  printf("Hello\n");
+  puts("Hello C\n");
 }

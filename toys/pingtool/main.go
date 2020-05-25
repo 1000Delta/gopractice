@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"regexp"
 	"sync"
 )
@@ -19,14 +20,17 @@ var (
 )
 
 func main() {
-	if !flag.Parsed() {
-		flag.PrintDefaults()
-	}
+	// flag definition
+	var outputType string
+	flag.StringVar(&outputType, "type", "read", `Output type.
+		"read" means output with format description;
+		"proc" means only data with format and hide error."`)
 	flag.Parse()
-	switch flag.NArg() {
+	args := flag.Args()
+	switch len(args) {
 	case 0:
 	case 1:
-		pingFileName = flag.Args()[0]
+		pingFileName = args[0]
 	default:
 		flag.PrintDefaults()
 		return
@@ -34,7 +38,11 @@ func main() {
 	// set logger
 	log.SetPrefix("[pingtool]")
 	// read pingFile
-	log.Println("Reading hosts from: " + pingFileName)
+	switch outputType {
+	case "read":
+		log.Println("Reading hosts from: " + pingFileName)
+	case "proc":
+	}
 	hdata, err := ioutil.ReadFile(pingFileName)
 	if err != nil {
 		log.Fatal(err.Error())
@@ -46,10 +54,19 @@ func main() {
 				HostLineFmtRegexp,
 				bytes.Split(hosts[0], []byte{'#'})[0],
 			); !isMatch {
-			log.Fatalln("the ping file cannot been parse")
+			switch outputType {
+			case "read":
+				log.Fatalln("the ping file cannot been parse")
+			case "proc":
+				os.Exit(1)
+			}
 		}
 	}
-	fmt.Printf("Name\t\t\tIP\t\tTTL\t\tTime:\tmin\tavg\tmax\tmdev\n")
+	switch outputType {
+	case "read":
+		fmt.Printf("Name\t\t\tIP\t\tTTL\t\tTime:\tmin\tavg\tmax\tmdev\n")
+	case "proc":
+	}
 	// ping
 	for id, hostLine := range hosts {
 		hostLine = bytes.TrimSpace(hostLine)
@@ -63,12 +80,20 @@ func main() {
 			defer wg.Done()
 			host, err := NewHost(string(hostLine))
 			if err != nil {
-				log.Printf("Cannot parse this line: line %d\n", line)
+				switch outputType {
+				case "read":
+					log.Printf("Cannot parse this line: line %d\n", line)
+				case "proc":
+				}
 				return
 			}
 			info, err := host.Ping()
 			if err != nil {
-				fmt.Printf("%-10s\t\t%s\n", host.Name, err.Error())
+				switch outputType {
+				case "read":
+					fmt.Printf("%-10s\t\t%s\n", host.Name, err.Error())
+				case "proc":
+				}
 				return
 			}
 			fmt.Printf(
