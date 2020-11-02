@@ -1,0 +1,5 @@
+type {{ .ServiceName }}Interface interface {
+  {{- range .MethodList }}
+  {{ .MethodName }}(req {{ .InputTypeName }}, rsp *{{ .OutputTypeName }}) error
+  {{- end }}
+}
