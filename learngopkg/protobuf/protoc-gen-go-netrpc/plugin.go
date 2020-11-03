@@ -78,12 +78,43 @@ func (p *netrpcPlugin) genServiceCode(svc *descriptor.ServiceDescriptorProto) {
 	p.P(buf.String())
 }
 
+// tmplService 服务模板
+// 包括服务接口，服务注册函数，服务客户端三个部分
 const tmplService = `
+{{ $root := . }}
+
 type {{ .ServiceName }}Interface interface {
   {{- range .MethodList }}
   {{ .MethodName }}(req {{ .InputTypeName }}, rsp *{{ .OutputTypeName }}) error
   {{- end }}
 }
+
+func Register{{ .ServiceName }}(srv *rpc.Server, x {{ .ServiceName }}Interface) error {
+    if err := srv.RegisterName("{{ .ServiceName }}", x); err != nil {
+        return err
+    }
+    return nil
+}
+
+type {{ .ServiceName }}Client struct {
+    *rpc.Client
+}
+
+var _ {{ .ServiceName }}Interface = (*{{ .ServiceName }}Client)(nil)
+
+func Dial{{ .ServiceName }}(network, address string) (*{{ .ServiceName }}Client, error) {
+    c, err := rpc.Dial(network, address)
+    if err != nil {
+        return nil, err
+    }
+    return &{{ .ServiceName }}Client{Client: c}, nil
+}
+
+{{ range .MethodList }}
+func (p *{{ $root.ServiceName }}Client) {{ .MethodName }}(req {{ .InputTypeName }}, rsp *{{ .OutputTypeName }}) error {
+    return p.Client.Call("{{ $root.ServiceName }}.{{ .MethodName }}", req, rsp)
+}
+{{- end }}
 `
 
 func init() {
