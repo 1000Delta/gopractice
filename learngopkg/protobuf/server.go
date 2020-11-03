@@ -1,11 +1,12 @@
 package main
 
 import (
+	"log"
 	"net"
-	"net/http"
 	"net/rpc"
 
-	"github.com/1000Delta/gopractice/learngopkg/protobuf/hello"
+	pb "github.com/1000Delta/gopractice/learngopkg/protobuf/hello"
+	pbcodec "github.com/mars9/codec"
 )
 
 // HelloService 定义一个类型，用来实现 rpc HelloServic
@@ -14,7 +15,7 @@ type HelloService struct{}
 
 // SayHello 方法供客户端调用
 //
-func (srv HelloService) SayHello(req hello.HelloRequest, rsp *hello.HelloResponse) (err error) {
+func (srv *HelloService) SayHello(req pb.HelloRequest, rsp *pb.HelloResponse) (err error) {
 	msg := "Hello"
 	if req.Name != "" {
 		msg += " " + req.Name
@@ -28,13 +29,26 @@ func (srv HelloService) SayHello(req hello.HelloRequest, rsp *hello.HelloRespons
 // TODO 使用 protobuf codec 编解码
 func Serve() {
 	srv := rpc.NewServer()
-	srv.Register(HelloService{})
-	srv.HandleHTTP("/hello", "/debug")
+	err := pb.RegisterHelloService(srv, &HelloService{})
+	if err != nil {
+		log.Fatal("RegisterHelloService: ", err)
+	}
 
 	l, err := net.Listen("tcp", ":8080")
 	if err != nil {
-		panic(err)
+		log.Fatal("Listen: ", err)
 	}
 
-	go http.Serve(l, nil)
+	for {
+		conn, err := l.Accept()
+		if err != nil {
+			log.Print("Accept: ", err)
+			continue
+		}
+		// 使用编解码器处理
+		codec := pbcodec.NewServerCodec(conn)
+		go srv.ServeCodec(codec)
+	}
+
+	// go http.Serve(l, nil)
 }
