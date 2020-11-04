@@ -30,7 +30,11 @@ func (p *netrpcPlugin) Generate(file *generator.FileDescriptor) {
 }
 
 func (p *netrpcPlugin) genImportCode(file *generator.FileDescriptor) {
-	p.P(`import "net/rpc"`)
+	p.P(`import (
+	"net"
+	"net/rpc"
+	"github.com/mars9/codec"
+)`)
 }
 
 // ServiceSpec 服务规范
@@ -108,6 +112,14 @@ func Dial{{ .ServiceName }}(network, address string) (*{{ .ServiceName }}Client,
         return nil, err
     }
     return &{{ .ServiceName }}Client{Client: c}, nil
+}
+
+func Dial{{ .ServiceName }}WithCodec(network, address string) (*{{ .ServiceName }}Client, error) {
+    conn, err := net.Dial(network, address)
+    if err != nil {
+        return nil, err
+    }
+    return &{{ .ServiceName }}Client{Client: rpc.NewClientWithCodec(codec.NewClientCodec(conn))}, nil
 }
 
 {{ range .MethodList }}
