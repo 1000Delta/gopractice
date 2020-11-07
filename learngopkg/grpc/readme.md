@@ -2,7 +2,7 @@
 
 ## Arch
 
-- [`hello`](./hello/): grpc 基础练习，包含服务器和客户端
+- [`hello-tls`](./hello-tls/): grpc 基础练习，包含服务器和客户端，启用 TLS 公私钥加密
 
 ## 初始化
 
