@@ -3,6 +3,9 @@ package main
 import (
 	"context"
 	"os"
+	"time"
+
+	"google.golang.org/grpc/credentials"
 
 	pb "github.com/1000Delta/gopractice/learngopkg/grpc/hello/helloserver/proto/hello"
 
@@ -18,18 +21,33 @@ func main() {
 	// 设置 stdout 为 logger 输出
 	grpclog.SetLoggerV2(grpclog.NewLoggerV2(os.Stdout, os.Stdout, os.Stderr))
 
-	// grpc 链接 参数忽略证书
-	conn, err := grpc.Dial(address, grpc.WithInsecure())
+	// 配置*客户端* TLS 证书
+	creds, err := credentials.NewClientTLSFromFile("../server.pem", "helloserver")
+	if err != nil {
+		grpclog.Fatalln(err)
+	}
+
+	// grpc 链接 使用 TLS 证书
+	conn, err := grpc.Dial(address, grpc.WithTransportCredentials(creds))
+	// conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
 		grpclog.Fatalf("Dial conn %v error: %v", address, err.Error())
 	}
 
 	client := pb.NewHelloClient(conn)
 
-	rsp, err := client.SayHello(context.Background(), &pb.HelloRequest{Name: "Delta"})
-	if err != nil {
-		grpclog.Errorf("request error: %v", err.Error())
+	ticker := time.NewTicker(time.Second)
+
+	for {
+		rsp, err := client.SayHello(context.Background(), &pb.HelloRequest{Name: "Delta"})
+		if err != nil {
+			grpclog.Errorf("request error: %v", err.Error())
+		}
+		grpclog.Infoln("grpc response: " + rsp.Message)
+
+		select {
+		case <-ticker.C:
+		}
 	}
 
-	grpclog.Infoln("grpc response: " + rsp.Message)
 }

@@ -2,7 +2,7 @@ module github.com/1000Delta/gopractice/learngopkg/grpc/hello/helloclient
 
 go 1.13
 
-replace github.com/1000Delta/gopractice/learngopkg/grpc/hello/helloserver => ../server
+replace github.com/1000Delta/gopractice/learngopkg/grpc/hello/helloserver => ../server // 重定向包到其他目录
 
 require (
 	github.com/1000Delta/gopractice/learngopkg/grpc/hello/helloserver v0.0.0
