@@ -1,0 +1,6 @@
+# credentials
+/server.key
+/server.pem
+
+# logs
+*.log
