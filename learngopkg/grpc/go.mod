@@ -1,4 +1,4 @@
-module github.com/1000Delta/gopractice/learngopkg/grpc/hello/helloserver
+module github.com/1000Delta/gopractice/learngopkg/grpc
 
 go 1.13
 

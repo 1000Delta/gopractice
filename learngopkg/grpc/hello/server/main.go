@@ -6,7 +6,7 @@ import (
 	"net"
 	"os"
 
-	pb "github.com/1000Delta/gopractice/learngopkg/grpc/hello/helloserver/proto/hello"
+	pb "github.com/1000Delta/gopractice/learngopkg/grpc/proto/hello"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -40,7 +40,7 @@ func main() {
 	grpclog.SetLoggerV2(grpclog.NewLoggerV2(os.Stdout, os.Stdout, os.Stderr))
 
 	// TLS 认证
-	creds, err := credentials.NewServerTLSFromFile("../server.pem", "../server.key")
+	creds, err := credentials.NewServerTLSFromFile("../../keys/server.pem", "../../keys/server.key")
 	if err != nil {
 		grpclog.Errorln("NewServerTLSFromFile: " + err.Error())
 	}

@@ -9,14 +9,26 @@ server.pem:
 .PHONY: init
 init: server.key server.pem
 
+server/helloserver:
+	cd server && go build -o helloserver .
+
+client/helloclient:
+	cd client && go build -o helloclient .
+
 .PHONY: server
-server:
-	cd server && (go run . >>server.log &)
+server: server/helloserver
+	cd server && (./helloserver >>server.log &)
 
 .PHONY: client
-client:
-	cd client && (go run . >>client.log &)
+client: client/helloclient
+	cd client && (./helloclient >>client.log &)
 
 .PHONY: stop
 stop:
 	kill $$(ps | grep -P "hello(client|server)" | awk '{print $$1}')
+
+.PHONY: clean
+.IGNORE: clean
+clean:
+	rm server/helloserver
+	rm client/helloclient

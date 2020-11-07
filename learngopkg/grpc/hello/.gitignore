@@ -1,6 +1,3 @@
-# credentials
-/server.key
-/server.pem
-
-# logs
-*.log
+# build
+helloclient
+helloserver
